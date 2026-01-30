@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Candidature LSPD</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<div class="background"></div>
+
+<div class="card">
+  <h1>Candidature <span>LSPD</span></h1>
+  <p class="subtitle">Los Santos Police Department</p>
+
+  <form id="staffForm">
+    <h2>Informations personnelles</h2>
+
+    <label>Nom RP</label>
+    <input type="text" id="nom" placeholder="Votre nom RP" required>
+
+    <label>Prénom RP</label>
+    <input type="text" id="prenom" placeholder="Votre prénom RP" required>
+
+    <label>Âge RP</label>
+    <input type="number" id="age" placeholder="Votre âge RP" required>
+
+    <label>Numéro de téléphone</label>
+    <input type="text" id="phone" placeholder="000-0000">
+
+    <label>Disponibilités</label>
+    <textarea id="dispo" placeholder="Vos horaires de jeu"></textarea>
+
+    <h2>Motivation</h2>
+
+    <label>Pourquoi souhaitez-vous rejoindre le LSPD ?</label>
+    <textarea id="motivation" placeholder="Expliquez vos motivations..." required></textarea>
+
+    <label>Vos expériences RP (si applicable)</label>
+    <textarea id="experience" placeholder="Décrivez vos expériences passées..."></textarea>
+
+    <label>Casier judiciaire RP vierge ?</label>
+    <div class="radio-group">
+      <label><input type="radio" name="casier" value="Oui" required> Oui</label>
+      <label><input type="radio" name="casier" value="Non"> Non</label>
+    </div>
+
+    <button type="submit">Envoyer ma candidature</button>
+  </form>
+</div>
+
+<script>
+const WEBHOOK_URL = "https://discord.com/api/webhooks/1466881524774469632/dj60IZi1Fjk-2cJVSI86B97J8i8NBWLXxt30U7t3Ctjh7z9i4pPkYYF1hXmeq9_E7Xns";
+
+document.getElementById("staffForm").addEventListener("submit", e => {
+  e.preventDefault();
+
+  const getRadio = name =>
+    document.querySelector(`input[name="${name}"]:checked`)?.value || "Non renseigné";
+
+  const embed = {
+    title: "📥 Nouvelle candidature LSPD",
+    color: 16741158,
+    fields: [
+      { name: "👤 Nom RP", value: nom.value, inline: true },
+      { name: "🧾 Prénom RP", value: prenom.value, inline: true },
+      { name: "🎂 Âge RP", value: age.value, inline: true },
+      { name: "📞 Téléphone", value: phone.value || "—", inline: true },
+      { name: "⏰ Disponibilités", value: dispo.value || "—" },
+      { name: "🔥 Motivations", value: motivation.value || "—" },
+      { name: "🎮 Expérience RP", value: experience.value || "—" },
+      { name: "⚖️ Casier vierge", value: getRadio("casier"), inline: true }
+    ],
+    footer: { text: "LSPD Recruitment" },
+    timestamp: new Date()
+  };
+
+  fetch(WEBHOOK_URL, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ embeds: [embed] })
+  })
+  .then(() => {
+    alert("✅ Candidature envoyée !");
+    staffForm.reset();
+  })
+  .catch(() => alert("❌ Erreur d’envoi"));
+});
+</script>
+
+</body>
+</html>
